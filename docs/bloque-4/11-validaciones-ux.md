@@ -73,7 +73,7 @@ Se pasa como `asyncValidators`. **Solo se ejecuta si los validadores síncronos 
 > En este proyecto la lista de nombres ocupados está escrita a mano (simulación). En una app real, la validación llamaría a un endpoint.
 
 ## Manejo de errores visuales
-Repetir `@if (control.errors?.['required'])…` en cada campo es tedioso. El componente [`shared/ui/field-error.ts`](../../frontend/src/app/shared/ui/field-error.ts) lo centraliza:
+Repetir `@if (control.errors?.['required'])…` en cada campo es tedioso. El componente [`shared/ui/field-error.ts`](../../frontend/src/app/shared/ui/field-error.ts) (+ [`field-error.html`](../../frontend/src/app/shared/ui/field-error.html)) lo centraliza:
 
 ```html
 <input formControlName="price" ... />

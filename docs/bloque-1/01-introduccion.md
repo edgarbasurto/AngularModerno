@@ -42,7 +42,7 @@ Un componente standalone declara **él mismo** qué necesita, sin pasar por un m
 @Component({
   selector: 'app-badge',
   imports: [/* aquí lo que usa su template */],
-  template: `<span><ng-content /></span>`,
+  templateUrl: './badge.html',   // <span><ng-content /></span>
 })
 export class Badge {}
 ```

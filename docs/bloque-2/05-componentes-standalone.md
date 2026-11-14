@@ -20,9 +20,14 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-badge',
-  template: `<span><ng-content /></span>`,
+  templateUrl: './badge.html',
 })
 export class Badge {}
+```
+
+```html
+<!-- badge.html -->
+<span><ng-content /></span>
 ```
 
 Las propiedades del decorador `@Component`:
@@ -30,7 +35,7 @@ Las propiedades del decorador `@Component`:
 | Propiedad | Qué hace |
 |---|---|
 | `selector` | Nombre de la etiqueta HTML (`<app-badge>`) |
-| `template` / `templateUrl` | HTML del componente (en línea o en archivo aparte) |
+| `templateUrl` (o `template`) | HTML del componente, en archivo aparte (o en línea) |
 | `imports` | Otros componentes, directivas y pipes que **usa su template** |
 | `styles` / `styleUrl` | Estilos encapsulados |
 | `providers` | Servicios con alcance de componente (tema 12) |
@@ -41,7 +46,7 @@ Para usar un componente dentro de otro, el padre lo **importa**:
 @Component({
   selector: 'app-root',
   imports: [Button, Card, Badge],   // ← sin esto, Angular no reconoce <app-card>
-  template: `<app-card title="Teclado"> ... </app-card>`,
+  templateUrl: './app.html',   // <app-card title="Teclado"> ... </app-card>
 })
 export class App {}
 ```
@@ -49,11 +54,13 @@ export class App {}
 > Si olvidas añadirlo a `imports`, el compilador falla con un error `NG8001`/`NG8002` indicando que el elemento desconocido.
 
 ## Templates
-Puedes escribir el HTML:
-- **En línea** (`template: \`...\``): cómodo para componentes pequeños. Es lo que usa este proyecto.
-- **En archivo** (`templateUrl: './button.html'`): mejor cuando el HTML pasa de unas 30 líneas.
+Hay dos formas de escribir el HTML de un componente:
+- **En línea** (`template: \`...\``): el HTML vive dentro del `.ts`. Sirve para demos de una línea.
+- **En archivo aparte** (`templateUrl: './button.html'`): un `.html` junto al `.ts`.
 
-Elige uno por equipo y sé consistente.
+**Regla de este proyecto: el HTML siempre va en archivo aparte.** Cada componente son dos archivos con el mismo nombre (`product-card.ts` + `product-card.html`). Ventajas: el editor ofrece resaltado y autocompletado de HTML, los cambios de vista y de lógica se distinguen en el control de versiones, y los diseñadores pueden tocar el HTML sin abrir TypeScript.
+
+> **Sobre los tags:** los tags `tema-02` a `tema-16` se hicieron con templates en línea. La separación en archivos `.html` se aplicó **después**, en un commit posterior, así que en un `git checkout tema-NN` verás el HTML dentro del `.ts`. En la versión final (`master`) están separados. Los fragmentos de HTML de los documentos son idénticos en ambos casos.
 
 ## Estilos con Tailwind
 Las clases de Tailwind van directamente en el template. Para variantes de un componente (primario, secundario, peligro), se calcula la cadena de clases con `computed()`:
@@ -108,7 +115,7 @@ export class Button {
 `<ng-content>` coloca el contenido que el padre escribe dentro de la etiqueta. Con `select` se definen **ranuras** con nombre:
 
 ```html
-<!-- card.ts -->
+<!-- card.html -->
 <section class="rounded-xl border bg-white p-4 shadow-sm">
   <h3>{{ title() }}</h3>
   <ng-content />                              <!-- contenido principal -->
@@ -132,7 +139,7 @@ export class Button {
 <app-badge tone="ok">25 uds</app-badge>
 ```
 
-Código real: [`card.ts`](../../frontend/src/app/shared/ui/card.ts) y [`badge.ts`](../../frontend/src/app/shared/ui/badge.ts).
+Código real: [`card.ts`](../../frontend/src/app/shared/ui/card.ts) + [`card.html`](../../frontend/src/app/shared/ui/card.html) y [`badge.ts`](../../frontend/src/app/shared/ui/badge.ts) + [`badge.html`](../../frontend/src/app/shared/ui/badge.html).
 
 **Criterio para extraer un componente:** si un fragmento se repite 3 o más veces, o si tiene su propia lógica, o si su nombre explica mejor la intención (`<app-badge>` dice más que un `<span class="...">`).
 

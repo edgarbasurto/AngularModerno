@@ -13,7 +13,7 @@ Un **layout** es un componente que tiene la estructura repetida (navbar, sidebar
 
 | Layout | Para qué | Archivo |
 |---|---|---|
-| `MainLayout` | Navbar + sidebar + contenido | [`layouts/main-layout.ts`](../../frontend/src/app/layouts/main-layout.ts) |
+| `MainLayout` | Navbar + sidebar + contenido | [`layouts/main-layout.html`](../../frontend/src/app/layouts/main-layout.html) + [`.ts`](../../frontend/src/app/layouts/main-layout.ts) |
 | `AuthLayout` | Una tarjeta centrada (login) | [`layouts/auth-layout.ts`](../../frontend/src/app/layouts/auth-layout.ts) |
 
 Con esto, cada página solo escribe **su contenido**; el marco no se repite.

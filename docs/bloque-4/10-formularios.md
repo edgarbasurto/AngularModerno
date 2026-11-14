@@ -41,7 +41,7 @@ Puntos clave:
 - `f.invalid` vale `true` si algún campo es inválido. Su tipo es `boolean | null`, por eso `?? true` (con TypeScript estricto, el compilador lo exige).
 - `(ngSubmit)` se dispara al enviar (botón `type="submit"` o Enter).
 
-Código real: [`pages/contact.ts`](../../frontend/src/app/pages/contact.ts). Ruta: `/contact`.
+Código real: [`pages/contact.html`](../../frontend/src/app/pages/contact.html) y [`contact.ts`](../../frontend/src/app/pages/contact.ts). Ruta: `/contact`.
 
 ## Reactive forms
 Aquí el formulario es un **objeto en el código** y el template solo se conecta a él.

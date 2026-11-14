@@ -61,6 +61,8 @@ git checkout tema-08
 | `tema-15` | JWT, guards, roles |
 | `tema-16` | Environments, build, pruebas (incluye la corrección zoneless) |
 
+> Los tags se hicieron con templates en línea; los `.html` separados se aplicaron en un commit posterior, así que solo la versión final (`master`) los tiene separados.
+
 Vuelve a la última versión con `git checkout master` (o el nombre de tu rama principal).
 
 ## Estructura

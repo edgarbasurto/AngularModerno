@@ -42,7 +42,7 @@ Hay dos sitios válidos:
 @Component({
   imports: [NgIcon],
   providers: [provideIcons({ heroUsers })],
-  template: `<ng-icon name="heroUsers" />`,
+  templateUrl: './profile.html',   // <ng-icon name="heroUsers" />
 })
 ```
 
@@ -61,16 +61,19 @@ import { NgIcon } from '@ng-icons/core';
 
 @Component({
   imports: [NgIcon],
-  template: `
-    <h1 class="page-title flex items-center gap-2">
-      <ng-icon name="heroCube" size="1.75rem" /> MiniInventario
-    </h1>
-    <button class="inline-flex items-center gap-2 ...">
-      <ng-icon name="heroPlus" /> Nuevo producto
-    </button>
-  `,
+  templateUrl: './app.html',
 })
 export class App {}
+```
+
+```html
+<!-- app.html -->
+<h1 class="page-title flex items-center gap-2">
+  <ng-icon name="heroCube" size="1.75rem" /> MiniInventario
+</h1>
+<button class="inline-flex items-center gap-2 ...">
+  <ng-icon name="heroPlus" /> Nuevo producto
+</button>
 ```
 
 Inputs principales (según la documentación oficial):
@@ -84,7 +87,7 @@ Inputs principales (según la documentación oficial):
 
 Con Tailwind puedes colorear con clases de texto: `<ng-icon class="text-brand-600" />`.
 
-Código real: [`app.ts`](../../frontend/src/app/app.ts) y [`shared/ui/button.ts`](../../frontend/src/app/shared/ui/button.ts), que acepta un `icon` como input.
+Código real: [`app.html`](../../frontend/src/app/app.html) y [`shared/ui/button.ts`](../../frontend/src/app/shared/ui/button.ts) (+ [`button.html`](../../frontend/src/app/shared/ui/button.html)), que acepta un `icon` como input.
 
 ## Organización de la iconografía
 En lugar de importar iconos suelto por toda la app, hay **un solo archivo** que es el catálogo: [`shared/icons.ts`](../../frontend/src/app/shared/icons.ts).

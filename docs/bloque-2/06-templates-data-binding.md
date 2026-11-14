@@ -72,7 +72,7 @@ export class ProductCard {
 - `computed()`: valor derivado de otros signals; se recalcula solo cuando cambian.
 - Regla: **los datos bajan por `input`, los eventos suben por `output`.**
 
-Código real: [`products/product-card.ts`](../../frontend/src/app/products/product-card.ts) y el padre [`app.ts`](../../frontend/src/app/app.ts).
+Código real: [`products/product-card.html`](../../frontend/src/app/products/product-card.html) + [`product-card.ts`](../../frontend/src/app/products/product-card.ts) y el padre [`app.ts`](../../frontend/src/app/app.ts).
 
 > **Zoneless:** como este proyecto no usa `zone.js`, Angular actualiza la vista cuando cambia un **signal**, cuando ocurre un **evento** del template o cuando un `async` pipe recibe un valor. Una propiedad normal que cambia dentro de un `setTimeout` o de un `subscribe` **no** refresca la pantalla. Verás esto de nuevo en los temas 11 y 13.
 

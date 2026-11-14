@@ -70,7 +70,7 @@ Tres decisiones importantes:
 - **Estado derivado con `map`:** `count$` y `total$` se calculan desde `items$`; no se guardan aparte (y no se desincronizan).
 
 ### Consumir el estado con el `async` pipe
-[`cart/cart-page.ts`](../../frontend/src/app/cart/cart-page.ts):
+[`cart/cart-page.html`](../../frontend/src/app/cart/cart-page.html) (la clase está en [`cart-page.ts`](../../frontend/src/app/cart/cart-page.ts)):
 
 ```html
 @if (store.items$ | async; as items) {
@@ -88,7 +88,7 @@ El `async` pipe:
 
 Por eso es la forma preferida: evita el `subscribe()` manual y el `ngOnDestroy`.
 
-Y el contador del navbar ([`layouts/main-layout.ts`](../../frontend/src/app/layouts/main-layout.ts)):
+Y el contador del navbar ([`layouts/main-layout.html`](../../frontend/src/app/layouts/main-layout.html)):
 ```html
 <ng-icon name="heroShoppingCart" /> {{ cart.count$ | async }}
 ```

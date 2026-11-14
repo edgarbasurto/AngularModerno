@@ -79,7 +79,7 @@ Puntos clave:
 - `isLoggedIn` revisa `exp` en cada lectura: un token vencido cuenta como "sin sesión".
 
 ## Login
-[`auth/login.ts`](../../frontend/src/app/auth/login.ts) es un formulario reactivo (tema 10) dentro del `AuthLayout` (tema 9):
+[`auth/login.ts`](../../frontend/src/app/auth/login.ts) (+ [`login.html`](../../frontend/src/app/auth/login.html)) es un formulario reactivo (tema 10) dentro del `AuthLayout` (tema 9):
 
 ```ts
 submit() {
@@ -143,7 +143,7 @@ En [`app.routes.ts`](../../frontend/src/app/app.routes.ts):
 ```
 
 La interfaz también se adapta al rol:
-- El navbar muestra "Ingresar" o `usuario (rol)` + "Salir" ([`main-layout.ts`](../../frontend/src/app/layouts/main-layout.ts)).
+- El navbar muestra "Ingresar" o `usuario (rol)` + "Salir" ([`main-layout.html`](../../frontend/src/app/layouts/main-layout.html)).
 - El enlace **Admin** del sidebar y el botón **Eliminar** solo se muestran a los Admin.
 
 ### ⚠️ Esto es UX, no seguridad
