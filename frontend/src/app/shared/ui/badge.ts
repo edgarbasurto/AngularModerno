@@ -2,7 +2,7 @@ import { Component, computed, input } from '@angular/core';
 
 @Component({
   selector: 'app-badge',
-  template: `<span [class]="classes()"><ng-content /></span>`,
+  templateUrl: './badge.html',
 })
 export class Badge {
   tone = input<'ok' | 'warn' | 'info'>('info');

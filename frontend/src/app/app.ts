@@ -5,6 +5,6 @@ import { ToastContainer } from './shared/ui/toast-container';
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, ToastContainer],
-  template: `<router-outlet /><app-toast-container />`,
+  templateUrl: './app.html',
 })
 export class App {}

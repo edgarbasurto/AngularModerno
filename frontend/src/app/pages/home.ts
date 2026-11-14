@@ -4,10 +4,6 @@ import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-home',
   imports: [RouterLink],
-  template: `
-    <h1 class="page-title">Bienvenido a MiniInventario</h1>
-    <p class="mt-2 text-slate-600">Proyecto de ejemplo del curso Angular Moderno.</p>
-    <a routerLink="/products" class="mt-4 inline-block text-brand-600 underline">Ir a productos</a>
-  `,
+  templateUrl: './home.html',
 })
 export class Home {}

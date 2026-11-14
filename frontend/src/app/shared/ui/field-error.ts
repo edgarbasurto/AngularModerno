@@ -13,15 +13,7 @@ const MESSAGES: Record<string, (e: any) => string> = {
 
 @Component({
   selector: 'app-field-error',
-  template: `
-    @if (control().pending) {
-      <p class="mt-1 text-xs text-slate-500">Verificando…</p>
-    } @else if (control().invalid && (control().touched || control().dirty)) {
-      @for (msg of messages(); track msg) {
-        <p class="mt-1 text-xs text-red-600">{{ msg }}</p>
-      }
-    }
-  `,
+  templateUrl: './field-error.html',
 })
 export class FieldError {
   control = input.required<AbstractControl>();

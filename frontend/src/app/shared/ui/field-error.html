@@ -1,0 +1,7 @@
+@if (control().pending) {
+  <p class="mt-1 text-xs text-slate-500">Verificando…</p>
+} @else if (control().invalid && (control().touched || control().dirty)) {
+  @for (msg of messages(); track msg) {
+    <p class="mt-1 text-xs text-red-600">{{ msg }}</p>
+  }
+}

@@ -12,39 +12,7 @@ import { ProductsApi } from './products.api';
 @Component({
   selector: 'app-product-list',
   imports: [ProductCard, FormsModule, Button],
-  template: `
-    <h1 class="page-title mb-4">Productos</h1>
-    <input
-      class="mb-4 w-full rounded-lg border border-slate-300 px-3 py-2"
-      placeholder="Buscar producto..."
-      [(ngModel)]="search"
-    />
-
-    @if (loading()) {
-      <p class="text-slate-500">Cargando productos…</p>
-    } @else if (error()) {
-      <div class="rounded-lg border border-red-300 bg-red-50 p-4">
-        <p class="text-red-700">{{ error() }}</p>
-        <app-button class="mt-2 inline-block" variant="secondary" (click)="load()">Reintentar</app-button>
-      </div>
-    } @else {
-      <div class="grid gap-4 sm:grid-cols-2">
-        @for (p of filtered(); track p.id) {
-          <div>
-            <app-product-card [product]="p" (add)="onAdd($event)" />
-            <div class="mt-2 flex gap-2">
-              <app-button variant="secondary" (click)="goToDetail(p)">Ver detalle</app-button>
-              @if (auth.hasRole('Admin')) {
-                <app-button variant="danger" icon="heroTrash" (click)="remove(p)">Eliminar</app-button>
-              }
-            </div>
-          </div>
-        } @empty {
-          <p class="text-slate-500">Sin resultados.</p>
-        }
-      </div>
-    }
-  `,
+  templateUrl: './product-list.html',
 })
 export class ProductList implements OnInit {
   private api = inject(ProductsApi);

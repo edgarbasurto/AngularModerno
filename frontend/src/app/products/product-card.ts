@@ -10,30 +10,7 @@ import { Card } from '../shared/ui/card';
   selector: 'app-product-card',
   imports: [Card, Badge, Button, CurrencyPipe],
   providers: [ClickCounter],
-  template: `
-    <app-card [title]="product().name">
-      <!-- Interpolación -->
-      <p class="text-slate-600">Precio: {{ product().price | currency }}</p>
-
-      <!-- Property binding: [tone] se calcula desde el estado -->
-      <p class="mt-1">
-        Stock:
-        <app-badge [tone]="stockTone()">{{ product().stock }} uds</app-badge>
-      </p>
-
-      <p class="mt-1 text-xs text-slate-500">Clics en esta tarjeta: {{ counter.count }}</p>
-      <ng-container card-actions>
-        <!-- Event binding: (click) emite un output hacia el padre -->
-        <app-button
-          icon="heroShoppingCart"
-          [disabled]="product().stock === 0"
-          (click)="onAdd()"
-        >
-          Agregar
-        </app-button>
-      </ng-container>
-    </app-card>
-  `,
+  templateUrl: './product-card.html',
 })
 export class ProductCard {
   product = input.required<Product>();

@@ -6,18 +6,7 @@ type Variant = 'primary' | 'secondary' | 'danger';
 @Component({
   selector: 'app-button',
   imports: [NgIcon],
-  template: `
-    <button
-      [type]="type()"
-      [disabled]="disabled()"
-      [class]="classes()"
-    >
-      @if (icon(); as name) {
-        <ng-icon [name]="name" />
-      }
-      <ng-content />
-    </button>
-  `,
+  templateUrl: './button.html',
 })
 export class Button {
   variant = input<Variant>('primary');

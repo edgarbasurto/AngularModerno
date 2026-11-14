@@ -13,36 +13,7 @@ import { Category } from '../models/product';
 @Component({
   selector: 'app-product-form',
   imports: [ReactiveFormsModule, Button, FieldError, JsonPipe],
-  template: `
-    <h1 class="page-title mb-4">Nuevo producto</h1>
-    <form [formGroup]="form" (ngSubmit)="save()" class="max-w-md space-y-4" novalidate>
-      <div>
-        <input formControlName="name" placeholder="Nombre" [class]="inputClass('name')" />
-        <app-field-error [control]="form.controls.name" />
-      </div>
-      <div>
-        <input formControlName="price" type="number" placeholder="Precio" [class]="inputClass('price')" />
-        <app-field-error [control]="form.controls.price" />
-      </div>
-      <div>
-        <input formControlName="stock" type="number" placeholder="Stock" [class]="inputClass('stock')" />
-        <app-field-error [control]="form.controls.stock" />
-      </div>
-      <select formControlName="categoryId" [class]="inputClass('categoryId')">
-        @for (c of categories(); track c.id) {
-          <option [value]="c.id">{{ c.name }}</option>
-        }
-      </select>
-
-      <app-button type="submit" [disabled]="form.pending">Guardar</app-button>
-    </form>
-
-    <!-- Estados del formulario, para clase -->
-    <pre class="mt-6 max-w-md rounded-lg bg-slate-900 p-3 text-xs text-green-300">
-valid: {{ form.valid }}  invalid: {{ form.invalid }}  pending: {{ form.pending }}
-dirty: {{ form.dirty }}  touched: {{ form.touched }}
-errors(name): {{ form.controls.name.errors | json }}</pre>
-  `,
+  templateUrl: './product-form.html',
 })
 export class ProductForm {
   private fb = inject(FormBuilder);

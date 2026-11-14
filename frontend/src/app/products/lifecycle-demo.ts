@@ -2,7 +2,7 @@ import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, input } from '@
 
 @Component({
   selector: 'app-lifecycle-demo',
-  template: `<p class="text-sm text-slate-500">Observando: {{ label() }} (mira la consola)</p>`,
+  templateUrl: './lifecycle-demo.html',
 })
 export class LifecycleDemo implements OnChanges, OnInit, OnDestroy {
   label = input('');

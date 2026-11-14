@@ -9,26 +9,7 @@ import { AuthService } from './auth.service';
 @Component({
   selector: 'app-login',
   imports: [ReactiveFormsModule, Button, FieldError],
-  template: `
-    <h1 class="page-title mb-4">Iniciar sesión</h1>
-    <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-3" novalidate>
-      <div>
-        <input formControlName="username" placeholder="Usuario"
-          class="w-full rounded-lg border border-slate-300 px-3 py-2" />
-        <app-field-error [control]="form.controls.username" />
-      </div>
-      <div>
-        <input formControlName="password" type="password" placeholder="Contraseña"
-          class="w-full rounded-lg border border-slate-300 px-3 py-2" />
-        <app-field-error [control]="form.controls.password" />
-      </div>
-      @if (failed()) {
-        <p class="text-sm text-red-600">Usuario o contraseña incorrectos.</p>
-      }
-      <app-button type="submit" [disabled]="busy()">{{ busy() ? 'Ingresando…' : 'Ingresar' }}</app-button>
-    </form>
-    <p class="mt-4 text-xs text-slate-500">Demo: admin / admin123 · user / user123</p>
-  `,
+  templateUrl: './login.html',
 })
 export class Login {
   private fb = inject(FormBuilder);
