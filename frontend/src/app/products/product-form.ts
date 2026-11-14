@@ -1,5 +1,6 @@
 import { JsonPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FieldError } from '../shared/ui/field-error';
@@ -28,7 +29,7 @@ import { Category } from '../models/product';
         <app-field-error [control]="form.controls.stock" />
       </div>
       <select formControlName="categoryId" [class]="inputClass('categoryId')">
-        @for (c of categories; track c.id) {
+        @for (c of categories(); track c.id) {
           <option [value]="c.id">{{ c.name }}</option>
         }
       </select>
@@ -48,10 +49,14 @@ export class ProductForm {
   private router = inject(Router);
   private api = inject(ProductsApi);
   private notify = inject(NotificationService);
-  categories: Category[] = [];
+  categories = signal<Category[]>([]);
+
+  private cdr = inject(ChangeDetectorRef);
 
   constructor() {
-    this.api.categories().subscribe((c) => (this.categories = c));
+    // Zoneless: el estado "pending" del validador asíncrono no es un signal; avisamos manualmente.
+    this.form.statusChanges.pipe(takeUntilDestroyed()).subscribe(() => this.cdr.markForCheck());
+    this.api.categories().subscribe((c) => this.categories.set(c));
   }
 
   form = this.fb.nonNullable.group({

@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectorRef, Component, effect, inject, input } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 
 const MESSAGES: Record<string, (e: any) => string> = {
@@ -25,6 +25,17 @@ const MESSAGES: Record<string, (e: any) => string> = {
 })
 export class FieldError {
   control = input.required<AbstractControl>();
+
+  private cdr = inject(ChangeDetectorRef);
+
+  constructor() {
+    // Sin zone.js, un validador asíncrono que termina NO refresca la vista solo.
+    // markForCheck() le avisa a Angular que vuelva a revisar este componente.
+    effect((onCleanup) => {
+      const sub = this.control().statusChanges.subscribe(() => this.cdr.markForCheck());
+      onCleanup(() => sub.unsubscribe());
+    });
+  }
 
   messages() {
     const errors = this.control().errors ?? {};
