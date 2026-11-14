@@ -69,7 +69,7 @@ app.MapPost("/api/auth/login", (LoginRequest req) =>
 
 app.MapGet("/api/categories", () => categories);
 
-var api = app.MapGroup("/api/products").RequireAuthorization();
+var api = app.MapGroup("/api/products");
 
 api.MapGet("/", async (string? search) =>
 {
@@ -86,7 +86,7 @@ api.MapPost("/", (ProductDto dto) =>
     var p = new Product(nextId++, dto.Name, dto.Price, dto.Stock, dto.CategoryId);
     products.Add(p);
     return Results.Created($"/api/products/{p.Id}", p);
-});
+}).RequireAuthorization();
 
 api.MapPut("/{id:int}", (int id, ProductDto dto) =>
 {
@@ -94,7 +94,7 @@ api.MapPut("/{id:int}", (int id, ProductDto dto) =>
     if (i < 0) return Results.NotFound();
     products[i] = new Product(id, dto.Name, dto.Price, dto.Stock, dto.CategoryId);
     return Results.Ok(products[i]);
-});
+}).RequireAuthorization();
 
 api.MapDelete("/{id:int}", (int id) =>
     products.RemoveAll(p => p.Id == id) > 0 ? Results.NoContent() : Results.NotFound())

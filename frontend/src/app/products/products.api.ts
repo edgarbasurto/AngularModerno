@@ -1,35 +1,37 @@
-import { Injectable } from '@angular/core';
-import { delay, Observable, of, throwError } from 'rxjs';
-import { Category, Product } from '../models/product';
-import { CATEGORIES, PRODUCTS } from './products.data';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Category, Product, ProductDto } from '../models/product';
 
-export type ProductDto = Omit<Product, 'id'>;
-
-/**
- * Servicio de DATOS (en memoria). Misma firma que usará el servicio HTTP del tema 13,
- * así los componentes no cambian cuando se conecte la API real.
- */
+/** Servicio de DATOS: habla con la API .NET a través del proxy (/api → :5000). */
 @Injectable({ providedIn: 'root' })
 export class ProductsApi {
-  private items: Product[] = [...PRODUCTS];
-  private nextId = 100;
+  private http = inject(HttpClient);
+  private url = '/api/products';
 
-  getAll(): Observable<Product[]> {
-    return of([...this.items]).pipe(delay(400));
+  getAll(search?: string): Observable<Product[]> {
+    let params = new HttpParams();
+    if (search) params = params.set('search', search);
+    return this.http.get<Product[]>(this.url, { params });
   }
 
   getById(id: number): Observable<Product> {
-    const p = this.items.find((x) => x.id === id);
-    return p ? of(p).pipe(delay(200)) : throwError(() => new Error('Producto no encontrado'));
+    return this.http.get<Product>(`${this.url}/${id}`);
   }
 
   create(dto: ProductDto): Observable<Product> {
-    const p = { id: this.nextId++, ...dto };
-    this.items.push(p);
-    return of(p).pipe(delay(300));
+    return this.http.post<Product>(this.url, dto);
+  }
+
+  update(id: number, dto: ProductDto): Observable<Product> {
+    return this.http.put<Product>(`${this.url}/${id}`, dto);
+  }
+
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${id}`);
   }
 
   categories(): Observable<Category[]> {
-    return of(CATEGORIES);
+    return this.http.get<Category[]>('/api/categories');
   }
 }

@@ -17,35 +17,71 @@ import { ProductsApi } from './products.api';
       placeholder="Buscar producto..."
       [(ngModel)]="search"
     />
-    <div class="grid gap-4 sm:grid-cols-2">
-      @for (p of filtered(); track p.id) {
-        <div>
-          <app-product-card [product]="p" (add)="onAdd($event)" />
-          <app-button class="mt-2 inline-block" variant="secondary" (click)="goToDetail(p)">
-            Ver detalle
-          </app-button>
-        </div>
-      } @empty {
-        <p class="text-slate-500">Sin resultados.</p>
-      }
-    </div>
+
+    @if (loading()) {
+      <p class="text-slate-500">Cargando productos…</p>
+    } @else if (error()) {
+      <div class="rounded-lg border border-red-300 bg-red-50 p-4">
+        <p class="text-red-700">{{ error() }}</p>
+        <app-button class="mt-2 inline-block" variant="secondary" (click)="load()">Reintentar</app-button>
+      </div>
+    } @else {
+      <div class="grid gap-4 sm:grid-cols-2">
+        @for (p of filtered(); track p.id) {
+          <div>
+            <app-product-card [product]="p" (add)="onAdd($event)" />
+            <div class="mt-2 flex gap-2">
+              <app-button variant="secondary" (click)="goToDetail(p)">Ver detalle</app-button>
+              <app-button variant="danger" icon="heroTrash" (click)="remove(p)">Eliminar</app-button>
+            </div>
+          </div>
+        } @empty {
+          <p class="text-slate-500">Sin resultados.</p>
+        }
+      </div>
+    }
   `,
 })
 export class ProductList implements OnInit {
-  // inject(): forma moderna de pedir dependencias (en lugar del constructor)
   private api = inject(ProductsApi);
   private notify = inject(NotificationService);
   private router = inject(Router);
 
   search = signal('');
   products = signal<Product[]>([]);
+  loading = signal(false);
+  error = signal<string | null>(null);
+
   filtered = computed(() => {
     const q = this.search().trim().toLowerCase();
     return this.products().filter((p) => p.name.toLowerCase().includes(q));
   });
 
   ngOnInit() {
-    this.api.getAll().subscribe((list) => this.products.set(list));
+    this.load();
+  }
+
+  load() {
+    this.loading.set(true);
+    this.error.set(null);
+    this.api.getAll().subscribe({
+      next: (list) => {
+        this.products.set(list);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.error.set('No se pudieron cargar los productos.');
+        this.loading.set(false);
+      },
+    });
+  }
+
+  remove(p: Product) {
+    // Requiere rol Admin: hasta el tema 15 responderá 401 y lo captura el errorInterceptor.
+    this.api.delete(p.id).subscribe(() => {
+      this.products.update((list) => list.filter((x) => x.id !== p.id));
+      this.notify.success(`${p.name} eliminado`);
+    });
   }
 
   onAdd(p: Product) {

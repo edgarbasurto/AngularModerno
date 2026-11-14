@@ -7,7 +7,7 @@ import { Button } from '../shared/ui/button';
 import { noWhitespace, priceRange, uniqueName } from '../shared/validators';
 import { NotificationService } from '../core/services/notification.service';
 import { ProductsApi } from './products.api';
-import { CATEGORIES, PRODUCTS } from './products.data';
+import { Category } from '../models/product';
 
 @Component({
   selector: 'app-product-form',
@@ -48,12 +48,16 @@ export class ProductForm {
   private router = inject(Router);
   private api = inject(ProductsApi);
   private notify = inject(NotificationService);
-  categories = CATEGORIES;
+  categories: Category[] = [];
+
+  constructor() {
+    this.api.categories().subscribe((c) => (this.categories = c));
+  }
 
   form = this.fb.nonNullable.group({
     name: this.fb.nonNullable.control('', {
       validators: [Validators.required, Validators.minLength(3), noWhitespace],
-      asyncValidators: [uniqueName(PRODUCTS.map((p) => p.name))],
+      asyncValidators: [uniqueName(['Teclado mecánico', 'Lámpara LED', 'Clean Code'])],
     }),
     price: [0, [Validators.required, priceRange(1, 10000)]],
     stock: [0, [Validators.required, Validators.min(0)]],

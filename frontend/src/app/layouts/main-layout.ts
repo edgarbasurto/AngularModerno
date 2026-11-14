@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgIcon } from '@ng-icons/core';
+import { LoadingService } from '../core/services/loading.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -18,6 +19,10 @@ import { NgIcon } from '@ng-icons/core';
         <ng-icon name="heroUser" /> Ingresar
       </a>
     </header>
+
+    @if (loadingService.loading()) {
+      <div class="h-1 w-full animate-pulse bg-brand-500"></div>
+    }
 
     <div class="md:flex">
       <!-- Sidebar: oculto en móvil salvo que se abra; fijo en md+ -->
@@ -47,6 +52,7 @@ import { NgIcon } from '@ng-icons/core';
   `,
 })
 export class MainLayout {
+  loadingService = inject(LoadingService);
   sidebarOpen = signal(false);
   menu = [
     { link: '/', label: 'Inicio', icon: 'heroHome' },
