@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { FieldError } from '../shared/ui/field-error';
 import { Button } from '../shared/ui/button';
 import { noWhitespace, priceRange, uniqueName } from '../shared/validators';
+import { NotificationService } from '../core/services/notification.service';
+import { ProductsApi } from './products.api';
 import { CATEGORIES, PRODUCTS } from './products.data';
 
 @Component({
@@ -44,6 +46,8 @@ errors(name): {{ form.controls.name.errors | json }}</pre>
 export class ProductForm {
   private fb = inject(FormBuilder);
   private router = inject(Router);
+  private api = inject(ProductsApi);
+  private notify = inject(NotificationService);
   categories = CATEGORIES;
 
   form = this.fb.nonNullable.group({
@@ -68,7 +72,9 @@ export class ProductForm {
       this.form.markAllAsTouched(); // muestra todos los errores pendientes
       return;
     }
-    console.log('Producto', this.form.getRawValue());
-    this.router.navigate(['/products']);
+    this.api.create(this.form.getRawValue()).subscribe((p) => {
+      this.notify.success(`Producto "${p.name}" creado`);
+      this.router.navigate(['/products']);
+    });
   }
 }
