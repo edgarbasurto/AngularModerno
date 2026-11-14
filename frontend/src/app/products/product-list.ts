@@ -1,6 +1,7 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CartStore } from '../cart/cart.store';
 import { NotificationService } from '../core/services/notification.service';
 import { Product } from '../models/product';
 import { Button } from '../shared/ui/button';
@@ -45,6 +46,7 @@ import { ProductsApi } from './products.api';
 export class ProductList implements OnInit {
   private api = inject(ProductsApi);
   private notify = inject(NotificationService);
+  private cart = inject(CartStore);
   private router = inject(Router);
 
   search = signal('');
@@ -85,6 +87,7 @@ export class ProductList implements OnInit {
   }
 
   onAdd(p: Product) {
+    this.cart.add(p);
     this.notify.success(`${p.name} agregado`);
   }
 

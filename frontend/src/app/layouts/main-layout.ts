@@ -1,11 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AsyncPipe } from '@angular/common';
 import { NgIcon } from '@ng-icons/core';
+import { CartStore } from '../cart/cart.store';
 import { LoadingService } from '../core/services/loading.service';
 
 @Component({
   selector: 'app-main-layout',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgIcon],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgIcon, AsyncPipe],
   template: `
     <header class="sticky top-0 z-10 flex items-center gap-3 bg-brand-700 px-4 py-3 text-white">
       <!-- Botón hamburguesa: solo visible en móvil -->
@@ -15,6 +17,9 @@ import { LoadingService } from '../core/services/loading.service';
       <ng-icon name="heroCube" size="1.5rem" />
       <span class="font-semibold">MiniInventario</span>
       <span class="flex-1"></span>
+      <a routerLink="/cart" class="flex items-center gap-1 text-sm hover:underline">
+        <ng-icon name="heroShoppingCart" /> {{ cart.count$ | async }}
+      </a>
       <a routerLink="/auth/login" class="flex items-center gap-1 text-sm hover:underline">
         <ng-icon name="heroUser" /> Ingresar
       </a>
@@ -52,6 +57,7 @@ import { LoadingService } from '../core/services/loading.service';
   `,
 })
 export class MainLayout {
+  cart = inject(CartStore);
   loadingService = inject(LoadingService);
   sidebarOpen = signal(false);
   menu = [
