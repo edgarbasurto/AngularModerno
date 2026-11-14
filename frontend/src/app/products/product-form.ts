@@ -1,30 +1,44 @@
+import { JsonPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { FieldError } from '../shared/ui/field-error';
 import { Button } from '../shared/ui/button';
-import { CATEGORIES } from './products.data';
+import { noWhitespace, priceRange, uniqueName } from '../shared/validators';
+import { CATEGORIES, PRODUCTS } from './products.data';
 
-/** Reactive forms: el formulario se define en TypeScript. */
 @Component({
   selector: 'app-product-form',
-  imports: [ReactiveFormsModule, Button],
+  imports: [ReactiveFormsModule, Button, FieldError, JsonPipe],
   template: `
-    <h1 class="page-title mb-4">Nuevo producto (reactive)</h1>
-    <form [formGroup]="form" (ngSubmit)="save()" class="max-w-md space-y-3">
-      <input formControlName="name" placeholder="Nombre"
-        class="w-full rounded-lg border border-slate-300 px-3 py-2" />
-      <input formControlName="price" type="number" placeholder="Precio"
-        class="w-full rounded-lg border border-slate-300 px-3 py-2" />
-      <input formControlName="stock" type="number" placeholder="Stock"
-        class="w-full rounded-lg border border-slate-300 px-3 py-2" />
-      <select formControlName="categoryId"
-        class="w-full rounded-lg border border-slate-300 px-3 py-2">
+    <h1 class="page-title mb-4">Nuevo producto</h1>
+    <form [formGroup]="form" (ngSubmit)="save()" class="max-w-md space-y-4" novalidate>
+      <div>
+        <input formControlName="name" placeholder="Nombre" [class]="inputClass('name')" />
+        <app-field-error [control]="form.controls.name" />
+      </div>
+      <div>
+        <input formControlName="price" type="number" placeholder="Precio" [class]="inputClass('price')" />
+        <app-field-error [control]="form.controls.price" />
+      </div>
+      <div>
+        <input formControlName="stock" type="number" placeholder="Stock" [class]="inputClass('stock')" />
+        <app-field-error [control]="form.controls.stock" />
+      </div>
+      <select formControlName="categoryId" [class]="inputClass('categoryId')">
         @for (c of categories; track c.id) {
           <option [value]="c.id">{{ c.name }}</option>
         }
       </select>
-      <app-button type="submit" [disabled]="form.invalid">Guardar</app-button>
+
+      <app-button type="submit" [disabled]="form.pending">Guardar</app-button>
     </form>
+
+    <!-- Estados del formulario, para clase -->
+    <pre class="mt-6 max-w-md rounded-lg bg-slate-900 p-3 text-xs text-green-300">
+valid: {{ form.valid }}  invalid: {{ form.invalid }}  pending: {{ form.pending }}
+dirty: {{ form.dirty }}  touched: {{ form.touched }}
+errors(name): {{ form.controls.name.errors | json }}</pre>
   `,
 })
 export class ProductForm {
@@ -32,18 +46,28 @@ export class ProductForm {
   private router = inject(Router);
   categories = CATEGORIES;
 
-  // FormBuilder: atajo para crear FormGroup y FormControl
   form = this.fb.nonNullable.group({
-    name: ['', Validators.required],
-    price: [0, Validators.required],
-    stock: [0, Validators.required],
+    name: this.fb.nonNullable.control('', {
+      validators: [Validators.required, Validators.minLength(3), noWhitespace],
+      asyncValidators: [uniqueName(PRODUCTS.map((p) => p.name))],
+    }),
+    price: [0, [Validators.required, priceRange(1, 10000)]],
+    stock: [0, [Validators.required, Validators.min(0)]],
     categoryId: [1, Validators.required],
   });
 
-  // FormControl suelto, útil para un campo aislado (ej. un buscador)
-  searchControl = new FormControl('', { nonNullable: true });
+  // UX: borde rojo solo cuando el usuario ya interactuó
+  inputClass(name: keyof typeof this.form.controls) {
+    const c = this.form.controls[name];
+    const bad = c.invalid && (c.touched || c.dirty);
+    return `w-full rounded-lg border px-3 py-2 ${bad ? 'border-red-500 bg-red-50' : 'border-slate-300'}`;
+  }
 
   save() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched(); // muestra todos los errores pendientes
+      return;
+    }
     console.log('Producto', this.form.getRawValue());
     this.router.navigate(['/products']);
   }
