@@ -1,6 +1,7 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth/auth.service';
 import { CartStore } from '../cart/cart.store';
 import { NotificationService } from '../core/services/notification.service';
 import { Product } from '../models/product';
@@ -33,7 +34,9 @@ import { ProductsApi } from './products.api';
             <app-product-card [product]="p" (add)="onAdd($event)" />
             <div class="mt-2 flex gap-2">
               <app-button variant="secondary" (click)="goToDetail(p)">Ver detalle</app-button>
-              <app-button variant="danger" icon="heroTrash" (click)="remove(p)">Eliminar</app-button>
+              @if (auth.hasRole('Admin')) {
+                <app-button variant="danger" icon="heroTrash" (click)="remove(p)">Eliminar</app-button>
+              }
             </div>
           </div>
         } @empty {
@@ -46,6 +49,7 @@ import { ProductsApi } from './products.api';
 export class ProductList implements OnInit {
   private api = inject(ProductsApi);
   private notify = inject(NotificationService);
+  auth = inject(AuthService);
   private cart = inject(CartStore);
   private router = inject(Router);
 
@@ -79,7 +83,7 @@ export class ProductList implements OnInit {
   }
 
   remove(p: Product) {
-    // Requiere rol Admin: hasta el tema 15 responderá 401 y lo captura el errorInterceptor.
+    // Solo Admin puede borrar: el botón se oculta y la API además lo exige (403 si no).
     this.api.delete(p.id).subscribe(() => {
       this.products.update((list) => list.filter((x) => x.id !== p.id));
       this.notify.success(`${p.name} eliminado`);

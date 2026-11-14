@@ -1,6 +1,7 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
+import { AuthService } from '../../auth/auth.service';
 import { NotificationService } from '../services/notification.service';
 
 const MESSAGES: Record<number, string> = {
@@ -14,8 +15,11 @@ const MESSAGES: Record<number, string> = {
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const notify = inject(NotificationService);
+  const auth = inject(AuthService);
   return next(req).pipe(
     catchError((err: HttpErrorResponse) => {
+      // Token vencido o inválido: cerrar sesión y volver al login
+      if (err.status === 401 && auth.token()) auth.logout();
       notify.error(MESSAGES[err.status] ?? `Error inesperado (${err.status}).`);
       return throwError(() => err); // el componente también puede reaccionar
     }),

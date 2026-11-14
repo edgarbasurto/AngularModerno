@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { demoGuard } from './core/guards/demo.guard';
+import { authGuard, roleGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -12,6 +12,7 @@ export const routes: Routes = [
         children: [
           {
             path: 'new',
+            canActivate: [authGuard],
             loadComponent: () => import('./products/product-form').then((m) => m.ProductForm),
           },
           {
@@ -31,7 +32,7 @@ export const routes: Routes = [
       },
       {
         path: 'admin-demo',
-        canActivate: [demoGuard],
+        canActivate: [roleGuard('Admin')],
         loadComponent: () => import('./pages/admin-demo').then((m) => m.AdminDemo),
       },
     ],
@@ -42,7 +43,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'login',
-        loadComponent: () => import('./pages/login-placeholder').then((m) => m.LoginPlaceholder),
+        loadComponent: () => import('./auth/login').then((m) => m.Login),
       },
     ],
   },

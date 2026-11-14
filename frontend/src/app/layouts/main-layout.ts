@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { NgIcon } from '@ng-icons/core';
+import { AuthService } from '../auth/auth.service';
 import { CartStore } from '../cart/cart.store';
 import { LoadingService } from '../core/services/loading.service';
 
@@ -20,9 +21,18 @@ import { LoadingService } from '../core/services/loading.service';
       <a routerLink="/cart" class="flex items-center gap-1 text-sm hover:underline">
         <ng-icon name="heroShoppingCart" /> {{ cart.count$ | async }}
       </a>
-      <a routerLink="/auth/login" class="flex items-center gap-1 text-sm hover:underline">
-        <ng-icon name="heroUser" /> Ingresar
-      </a>
+      @if (auth.isLoggedIn()) {
+        <span class="flex items-center gap-1 text-sm">
+          <ng-icon name="heroUser" /> {{ auth.username() }} ({{ auth.role() }})
+        </span>
+        <button class="flex items-center gap-1 text-sm hover:underline" (click)="auth.logout()">
+          <ng-icon name="heroArrowRightOnRectangle" /> Salir
+        </button>
+      } @else {
+        <a routerLink="/auth/login" class="flex items-center gap-1 text-sm hover:underline">
+          <ng-icon name="heroUser" /> Ingresar
+        </a>
+      }
     </header>
 
     @if (loadingService.loading()) {
@@ -36,7 +46,7 @@ import { LoadingService } from '../core/services/loading.service';
         [class.hidden]="!sidebarOpen()"
       >
         <nav class="flex flex-col gap-1">
-          @for (item of menu; track item.link) {
+          @for (item of visibleMenu(); track item.link) {
             <a
               [routerLink]="item.link"
               routerLinkActive="bg-brand-100 text-brand-700"
@@ -57,14 +67,19 @@ import { LoadingService } from '../core/services/loading.service';
   `,
 })
 export class MainLayout {
+  auth = inject(AuthService);
   cart = inject(CartStore);
   loadingService = inject(LoadingService);
   sidebarOpen = signal(false);
-  menu = [
+  menu: { link: string; label: string; icon: string; admin?: boolean }[] = [
     { link: '/', label: 'Inicio', icon: 'heroHome' },
     { link: '/products', label: 'Productos', icon: 'heroCube' },
     { link: '/products/new', label: 'Nuevo producto', icon: 'heroPlus' },
     { link: '/contact', label: 'Contacto', icon: 'heroUser' },
-    { link: '/admin-demo', label: 'Admin (guard)', icon: 'heroTag' },
+    { link: '/admin-demo', label: 'Admin', icon: 'heroTag', admin: true },
   ];
+
+  visibleMenu() {
+    return this.menu.filter((m) => !m.admin || this.auth.hasRole('Admin'));
+  }
 }
