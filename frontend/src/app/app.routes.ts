@@ -11,6 +11,10 @@ export const routes: Routes = [
         path: 'products',
         children: [
           {
+            path: 'new',
+            loadComponent: () => import('./products/product-form').then((m) => m.ProductForm),
+          },
+          {
             path: '',
             loadComponent: () => import('./products/product-list').then((m) => m.ProductList),
           },
@@ -19,6 +23,10 @@ export const routes: Routes = [
             loadComponent: () => import('./products/product-detail').then((m) => m.ProductDetail),
           },
         ],
+      },
+      {
+        path: 'contact',
+        loadComponent: () => import('./pages/contact').then((m) => m.Contact),
       },
       {
         path: 'admin-demo',

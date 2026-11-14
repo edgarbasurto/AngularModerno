@@ -1,0 +1,40 @@
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Button } from '../shared/ui/button';
+
+/** Template-driven: el formulario se define en el HTML con ngModel. */
+@Component({
+  selector: 'app-contact',
+  imports: [FormsModule, Button],
+  template: `
+    <h1 class="page-title mb-4">Contacto (template-driven)</h1>
+    <form #f="ngForm" (ngSubmit)="send(f.value)" class="max-w-md space-y-3">
+      <input
+        name="name" [(ngModel)]="model.name" required
+        placeholder="Nombre"
+        class="w-full rounded-lg border border-slate-300 px-3 py-2"
+      />
+      <input
+        name="email" type="email" [(ngModel)]="model.email" required email
+        placeholder="Correo"
+        class="w-full rounded-lg border border-slate-300 px-3 py-2"
+      />
+      <textarea
+        name="message" [(ngModel)]="model.message" required
+        placeholder="Mensaje" rows="3"
+        class="w-full rounded-lg border border-slate-300 px-3 py-2"
+      ></textarea>
+      <app-button type="submit" [disabled]="f.invalid ?? true">Enviar</app-button>
+      @if (sent) { <p class="text-green-700">¡Enviado! Revisa la consola.</p> }
+    </form>
+  `,
+})
+export class Contact {
+  model = { name: '', email: '', message: '' };
+  sent = false;
+
+  send(value: unknown) {
+    console.log('Contacto', value);
+    this.sent = true;
+  }
+}

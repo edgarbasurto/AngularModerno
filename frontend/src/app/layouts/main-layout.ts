@@ -51,6 +51,8 @@ export class MainLayout {
   menu = [
     { link: '/', label: 'Inicio', icon: 'heroHome' },
     { link: '/products', label: 'Productos', icon: 'heroCube' },
+    { link: '/products/new', label: 'Nuevo producto', icon: 'heroPlus' },
+    { link: '/contact', label: 'Contacto', icon: 'heroUser' },
     { link: '/admin-demo', label: 'Admin (guard)', icon: 'heroTag' },
   ];
 }
