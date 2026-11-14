@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 import { tap } from 'rxjs';
 
 interface LoginResponse { token: string; username: string; role: string }
@@ -32,7 +33,7 @@ export class AuthService {
   });
 
   login(username: string, password: string) {
-    return this.http.post<LoginResponse>('/api/auth/login', { username, password }).pipe(
+    return this.http.post<LoginResponse>(`${environment.apiUrl}/api/auth/login`, { username, password }).pipe(
       tap((res) => {
         localStorage.setItem(TOKEN_KEY, res.token);
         this._token.set(res.token);

@@ -1,13 +1,15 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { Category, Product, ProductDto } from '../models/product';
 
 /** Servicio de DATOS: habla con la API .NET a través del proxy (/api → :5000). */
 @Injectable({ providedIn: 'root' })
 export class ProductsApi {
   private http = inject(HttpClient);
-  private url = '/api/products';
+  private base = environment.apiUrl + '/api';
+  private url = `${this.base}/products`;
 
   getAll(search?: string): Observable<Product[]> {
     let params = new HttpParams();
@@ -32,6 +34,6 @@ export class ProductsApi {
   }
 
   categories(): Observable<Category[]> {
-    return this.http.get<Category[]>('/api/categories');
+    return this.http.get<Category[]>(`${this.base}/categories`);
   }
 }
