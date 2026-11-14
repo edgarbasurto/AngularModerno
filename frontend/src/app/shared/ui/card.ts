@@ -1,0 +1,19 @@
+import { Component, input } from '@angular/core';
+
+@Component({
+  selector: 'app-card',
+  template: `
+    <section class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      @if (title()) {
+        <h3 class="mb-2 text-lg font-semibold">{{ title() }}</h3>
+      }
+      <ng-content />
+      <div class="mt-3 flex gap-2">
+        <ng-content select="[card-actions]" />
+      </div>
+    </section>
+  `,
+})
+export class Card {
+  title = input<string>('');
+}
